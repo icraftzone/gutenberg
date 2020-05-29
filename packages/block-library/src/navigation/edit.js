@@ -77,7 +77,9 @@ function Navigation( {
 	//
 
 	const ref = useRef();
-	const [ selectedMenu, setSelectedMenu ] = useState( null );
+	const [ selectedDropDownOption, setSelectedDropDownOption ] = useState(
+		null
+	);
 	const { selectBlock } = useDispatch( 'core/block-editor' );
 	const { TextColor, BackgroundColor, ColorPanel } = __experimentalUseColors(
 		[
@@ -128,7 +130,7 @@ function Navigation( {
 		);
 	}, [ pages ] );
 
-	const menuItems = getMenuItems( selectedMenu?.key );
+	const menuItems = getMenuItems( selectedDropDownOption?.key );
 
 	const navLinkBlocksFromMenuItems = useMemo( () => {
 		if ( ! menuItems ) {
@@ -197,7 +199,7 @@ function Navigation( {
 	}
 
 	function handleCreate() {
-		const { key } = selectedMenu;
+		const { key } = selectedDropDownOption;
 
 		// Explicity request to create empty.
 		if ( key === CREATE_EMPTY_OPTION_VALUE ) {
@@ -210,7 +212,11 @@ function Navigation( {
 		}
 
 		// Create from WP Menu (if exists and not empty).
-		if ( hasMenus && selectedMenu && navLinkBlocksFromMenuItems?.length ) {
+		if (
+			hasMenus &&
+			selectedDropDownOption &&
+			navLinkBlocksFromMenuItems?.length
+		) {
 			return handleCreateFromExistingMenu();
 		}
 
@@ -224,7 +230,7 @@ function Navigation( {
 				'Create a Navigation from all existing pages, or create an empty one.'
 		  );
 
-	const menuOptions = [
+	const dropDownOptions = [
 		{
 			id: 'placeholder',
 			name: __( 'Select where to start from…' ),
@@ -271,15 +277,20 @@ function Navigation( {
 							<CustomSelectControl
 								label={ __( 'Create from existing Menu' ) }
 								hideLabelFromVision={ true }
-								value={ selectedMenu || menuOptions[ 0 ] }
+								value={
+									selectedDropDownOption ||
+									dropDownOptions[ 0 ]
+								}
 								onChange={ ( value ) => {
-									setSelectedMenu( value.selectedItem );
+									setSelectedDropDownOption(
+										value.selectedItem
+									);
 								} }
-								options={ menuOptions.map( ( mappedMenu ) => {
+								options={ dropDownOptions.map( ( option ) => {
 									return {
-										name: mappedMenu.name,
-										key: mappedMenu.id,
-										disabled: mappedMenu.disabled,
+										name: option.name,
+										key: option.id,
+										disabled: option.disabled,
 									};
 								} ) }
 							/>
@@ -287,12 +298,12 @@ function Navigation( {
 								isSecondary
 								className="wp-block-navigation-placeholder__button"
 								onClick={ () => {
-									if ( ! selectedMenu ) {
+									if ( ! selectedDropDownOption ) {
 										return;
 									}
 									handleCreate();
 								} }
-								disabled={ ! selectedMenu }
+								disabled={ ! selectedDropDownOption }
 							>
 								{ __( 'Create' ) }
 							</Button>
