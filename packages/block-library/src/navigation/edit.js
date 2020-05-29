@@ -71,6 +71,7 @@ function Navigation( {
 } ) {
 	const CREATE_EMPTY_OPTION_VALUE = '__CREATE_EMPTY__';
 	const CREATE_FROM_PAGES_OPTION_VALUE = '__CREATE_FROM_PAGES__';
+	const CREATE_PLACEHOLDER_VALUE = '__CREATE_PLACEHOLDER__';
 
 	//
 	// HOOKS
@@ -233,7 +234,7 @@ function Navigation( {
 
 	const dropDownOptions = [
 		{
-			id: 'placeholder',
+			id: CREATE_PLACEHOLDER_VALUE,
 			name: __( 'Select where to start from…' ),
 		},
 		...( hasMenus ? menus : [] ),
@@ -298,7 +299,11 @@ function Navigation( {
 									}
 									handleCreate();
 								} }
-								disabled={ ! selectedDropDownOption }
+								disabled={
+									! selectedDropDownOption ||
+									selectedDropDownOption.key ===
+										CREATE_PLACEHOLDER_VALUE
+								}
 							>
 								{ __( 'Create' ) }
 							</Button>
