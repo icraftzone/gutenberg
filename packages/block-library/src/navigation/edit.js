@@ -63,6 +63,7 @@ function Navigation( {
 	isImmediateParentOfSelectedBlock,
 	isRequestingPages,
 	isRequestingMenuItems,
+	checkHasResolvedMenuItems,
 	hasResolvedMenus,
 	isRequestingMenus,
 	isSelected,
@@ -252,6 +253,21 @@ function Navigation( {
 			: [] ),
 	];
 
+	function shouldDisableCreateButton() {
+		if ( ! selectedDropDownOption?.key ) {
+			return true; // disable button
+		}
+
+		const placeholderOptionSelected =
+			selectedDropDownOption.key === CREATE_PLACEHOLDER_VALUE;
+
+		const menuItemsResolved =
+			Number.isInteger( selectedDropDownOption.key ) &&
+			checkHasResolvedMenuItems( selectedDropDownOption.key );
+
+		return placeholderOptionSelected || ! menuItemsResolved;
+	}
+
 	// If we don't have existing items then show the Placeholder
 	if ( ! hasExistingNavItems ) {
 		return (
@@ -299,11 +315,7 @@ function Navigation( {
 									}
 									handleCreate();
 								} }
-								disabled={
-									! selectedDropDownOption ||
-									selectedDropDownOption.key ===
-										CREATE_PLACEHOLDER_VALUE
-								}
+								disabled={ shouldDisableCreateButton() }
 							>
 								{ __( 'Create' ) }
 							</Button>
@@ -468,7 +480,7 @@ export default compose( [
 		const menuItemsSelect = [
 			'core',
 			'getEntityRecords',
-			[ 'root', 'menu-Item' ],
+			[ 'root', 'menu-item' ],
 		];
 
 		const isImmediateParentOfSelectedBlock = hasSelectedInnerBlock(
@@ -513,7 +525,7 @@ export default compose( [
 				...menusSelect
 			),
 			isRequestingMenuItems: () => {
-				select( 'core/data' ).isResolving( ...menuItemsSelect );
+				return select( 'core/data' ).isResolving( ...menuItemsSelect );
 			},
 			hasResolvedPages: select( 'core/data' ).hasFinishedResolution(
 				...pagesSelect
@@ -521,9 +533,18 @@ export default compose( [
 			hasResolvedMenus: select( 'core/data' ).hasFinishedResolution(
 				...menusSelect
 			),
-			hasResolvedMenuItems: () => {
-				select( 'core/data' ).hasFinishedResolution(
-					...menuItemsSelect
+			checkHasResolvedMenuItems: ( menuId ) => {
+				return select( 'core/data' ).hasFinishedResolution(
+					'core',
+					'getEntityRecords',
+					[
+						'root',
+						'menu-item',
+						{
+							menus: menuId,
+							per_page: -1,
+						},
+					]
 				);
 			},
 		};
