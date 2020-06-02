@@ -144,8 +144,7 @@ function gutenberg_edit_site_init( $hook ) {
 	}
 	$settings['styles'] = gutenberg_get_editor_styles();
 
-	$template_ids      = array();
-	$template_part_ids = array();
+	$template_ids = array();
 	foreach ( get_template_types() as $template_type ) {
 		// Skip 'embed' for now because it is not a regular template type.
 		// Skip 'index' because it's a fallback that we handle differently.
@@ -156,7 +155,6 @@ function gutenberg_edit_site_init( $hook ) {
 		$current_template = gutenberg_find_template_post_and_parts( $template_type );
 		if ( isset( $current_template ) ) {
 			$template_ids[ $current_template['template_post']->post_name ] = $current_template['template_post']->ID;
-			$template_part_ids = $template_part_ids + $current_template['template_part_ids'];
 		}
 	}
 
@@ -164,11 +162,9 @@ function gutenberg_edit_site_init( $hook ) {
 
 	$settings['editSiteInitialState'] = array();
 
-	$settings['editSiteInitialState']['homeTemplateId']  = $current_template_id;
 	$settings['editSiteInitialState']['templateId']      = $current_template_id;
 	$settings['editSiteInitialState']['templateType']    = 'wp_template';
 	$settings['editSiteInitialState']['templateIds']     = array_values( $template_ids );
-	$settings['editSiteInitialState']['templatePartIds'] = array_values( $template_part_ids );
 
 	$settings['editSiteInitialState']['showOnFront'] = get_option( 'show_on_front' );
 	$settings['editSiteInitialState']['page']        = array(
