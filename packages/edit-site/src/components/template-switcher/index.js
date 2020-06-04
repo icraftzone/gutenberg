@@ -3,7 +3,7 @@
  */
 import { __ } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
-import { resolveSelect, useDispatch, useSelect } from '@wordpress/data';
+import { resolveSelect, useSelect } from '@wordpress/data';
 import { useEffect, useState } from '@wordpress/element';
 import {
 	Tooltip,
@@ -147,8 +147,6 @@ export default function TemplateSwitcher( {
 		value: templatePart.id,
 		slug: templatePart.slug,
 	} ) );
-
-	const { saveEntityRecord } = useDispatch( 'core' );
 
 	const overwriteSlug =
 		TEMPLATE_OVERRIDES[ page.type ] &&
