@@ -244,7 +244,7 @@ function Navigation( {
 
 		if ( ! hasMenus && hasPages ) {
 			return __(
-				'Create a Navigation from all existing pages, or create empty.'
+				'Create a navigation from all existing pages, or create empty.'
 			);
 		}
 	}
