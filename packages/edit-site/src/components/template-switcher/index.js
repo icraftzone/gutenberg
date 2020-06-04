@@ -2,8 +2,7 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { addQueryArgs } from '@wordpress/url';
-import { resolveSelect, useSelect } from '@wordpress/data';
+import { useRegistry, useSelect } from '@wordpress/data';
 import { useEffect, useState } from '@wordpress/element';
 import {
 	Tooltip,
@@ -17,13 +16,9 @@ import { Icon, home, plus, undo } from '@wordpress/icons';
 /**
  * Internal dependencies
  */
+import { findTemplate } from '../../utils';
 import TemplatePreview from './template-preview';
 import ThemePreview from './theme-preview';
-
-/**
- * Browser dependencies
- */
-const { fetch } = window;
 
 const TEMPLATE_OVERRIDES = {
 	page: ( slug ) => `page-${ slug }`,
@@ -74,35 +69,18 @@ export default function TemplateSwitcher( {
 		setThemePreviewVisible( () => false );
 	};
 
+	const registry = useRegistry();
 	const [ homeId, setHomeId ] = useState();
 
 	useEffect( () => {
-		const effect = async () => {
-			try {
-				const { success, data } = await fetch(
-					addQueryArgs( '/', { '_wp-find-template': true } )
-				).then( ( res ) => res.json() );
-				if ( success ) {
-					let newHomeId = data.ID;
-					if ( newHomeId === null ) {
-						const { getEntityRecords } = resolveSelect( 'core' );
-						newHomeId = (
-							await getEntityRecords( 'postType', 'wp_template', {
-								resolved: true,
-								slug: data.post_name,
-							} )
-						 )[ 0 ].id;
-					}
-					setHomeId( newHomeId );
-				} else {
-					throw new Error();
-				}
-			} catch ( err ) {
-				setHomeId( null );
-			}
-		};
-		effect();
-	}, [] );
+		findTemplate(
+			'/',
+			registry.__experimentalResolveSelect( 'core' ).getEntityRecords
+		).then(
+			( newHomeId ) => setHomeId( newHomeId ),
+			() => setHomeId( null )
+		);
+	}, [ registry ] );
 
 	const { currentTheme, template, templateParts } = useSelect(
 		( _select ) => {
