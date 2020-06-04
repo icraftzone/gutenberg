@@ -141,7 +141,7 @@ add_action( 'manage_wp_template_part_posts_custom_column', 'gutenberg_render_tem
 
 
 /**
- * Filter for adding a `resolved` and a `theme` parameter to `wp_template_part` queries.
+ * Filter for adding a `resolved`, a `template`, and a `theme` parameter to `wp_template_part` queries.
  *
  * @param array $query_params The query parameters.
  * @return array Filtered $query_params.
@@ -151,6 +151,10 @@ function filter_rest_wp_template_part_collection_params( $query_params ) {
 		'resolved' => array(
 			'description' => __( 'Whether to filter for resolved template parts.', 'gutenberg' ),
 			'type'        => 'boolean',
+		),
+		'template'    => array(
+			'description' => __( 'The template slug for the template that the template part is used by.', 'gutenberg' ),
+			'type'        => 'string',
 		),
 		'theme'    => array(
 			'description' => __( 'The theme slug for the theme that created the template part.', 'gutenberg' ),
@@ -162,7 +166,7 @@ function filter_rest_wp_template_part_collection_params( $query_params ) {
 apply_filters( 'rest_wp_template_part_collection_params', 'filter_rest_wp_template_part_collection_params', 99, 1 );
 
 /**
- * Filter for supporting the `resolved` and `theme` parameters in `wp_template_part` queries.
+ * Filter for supporting the `resolved`, `template`, and `theme` parameters in `wp_template_part` queries.
  *
  * @param array           $args    The query arguments.
  * @param WP_REST_Request $request The request object.
@@ -171,8 +175,9 @@ apply_filters( 'rest_wp_template_part_collection_params', 'filter_rest_wp_templa
 function filter_rest_wp_template_part_query( $args, $request ) {
 	if ( $request['resolved'] ) {
 		$template_part_ids = array( 0 ); // Return nothing by default (the 0 is needed for `post__in`).
+		$template_types = $request['template'] ? array( $request['template'] ) : get_template_types();
 
-		foreach ( get_template_types() as $template_type ) {
+		foreach ( $template_types as $template_type ) {
 			// Skip 'embed' for now because it is not a regular template type.
 			if ( in_array( $template_type, array( 'embed' ), true ) ) {
 				continue;

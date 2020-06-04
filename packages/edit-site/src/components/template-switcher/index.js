@@ -89,19 +89,20 @@ export default function TemplateSwitcher( {
 				getEntityRecord,
 				getEntityRecords,
 			} = _select( 'core' );
-			const theme = getCurrentTheme();
+
+			const _template = getEntityRecord(
+				'postType',
+				'wp_template',
+				activeId
+			);
 
 			return {
-				currentTheme: theme,
-				template: getEntityRecord(
-					'postType',
-					'wp_template',
-					activeId
-				),
-				templateParts: theme
+				currentTheme: getCurrentTheme(),
+				template: _template,
+				templateParts: _template
 					? getEntityRecords( 'postType', 'wp_template_part', {
 							resolved: true,
-							theme: theme.stylesheet,
+							template: _template.slug,
 					  } )
 					: null,
 			};
