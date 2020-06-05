@@ -62,7 +62,6 @@ function Navigation( {
 	hasResolvedPages,
 	isImmediateParentOfSelectedBlock,
 	isRequestingPages,
-	isRequestingMenuItems,
 	checkHasResolvedMenuItems,
 	hasResolvedMenus,
 	isRequestingMenus,
@@ -452,9 +451,7 @@ function Navigation( {
 						style={ blockInlineStyles }
 					>
 						{ ! hasExistingNavItems &&
-							( isRequestingPages ||
-								isRequestingMenus ||
-								isRequestingMenuItems() ) && (
+							( isRequestingPages || isRequestingMenus ) && (
 								<>
 									<Spinner /> { __( 'Loading Navigation…' ) }{ ' ' }
 								</>
@@ -513,12 +510,6 @@ export default compose( [
 			[ 'postType', 'page', filterDefaultPages ],
 		];
 
-		const menuItemsSelect = [
-			'core',
-			'getEntityRecords',
-			[ 'root', 'menu-item' ],
-		];
-
 		const isImmediateParentOfSelectedBlock = hasSelectedInnerBlock(
 			clientId,
 			false
@@ -539,7 +530,6 @@ export default compose( [
 				'page',
 				filterDefaultPages
 			),
-			// menus: select( 'core' ).getEntityRecords( 'root', 'menu' ),
 			menus: select( 'core' ).getMenus( menusQuery ),
 			isRequestingMenus: select( 'core' ).isResolving( 'getMenus', [
 				menusQuery,
@@ -558,28 +548,16 @@ export default compose( [
 					return false;
 				}
 
-				return select( 'core' ).getEntityRecords( 'root', 'menu-item', {
+				return select( 'core' ).getMenuItems( {
 					menus: menuId,
 					per_page: -1,
 				} );
 			},
-			isRequestingPages: select( 'core/data' ).isResolving(
-				...pagesSelect
-			),
-			isRequestingMenuItems: () => {
-				return select( 'core/data' ).isResolving( ...menuItemsSelect );
-			},
-			hasResolvedPages: select( 'core/data' ).hasFinishedResolution(
-				...pagesSelect
-			),
-
-			checkHasResolvedMenuItems: ( menuId ) => {
-				return select( 'core/data' ).hasFinishedResolution(
+			isRequestingMenuItems: ( menuId ) => {
+				return select( 'core/data' ).isResolving(
 					'core',
-					'getEntityRecords',
+					'getMenuItems',
 					[
-						'root',
-						'menu-item',
 						{
 							menus: menuId,
 							per_page: -1,
@@ -587,6 +565,22 @@ export default compose( [
 					]
 				);
 			},
+			checkHasResolvedMenuItems: ( menuId ) => {
+				return select( 'core' ).hasFinishedResolution( 'getMenuItems', [
+					{
+						menus: menuId,
+						per_page: -1,
+					},
+				] );
+			},
+
+			isRequestingPages: select( 'core/data' ).isResolving(
+				...pagesSelect
+			),
+
+			hasResolvedPages: select( 'core/data' ).hasFinishedResolution(
+				...pagesSelect
+			),
 		};
 	} ),
 	withDispatch( ( dispatch, { clientId } ) => {
