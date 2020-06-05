@@ -62,7 +62,7 @@ function Navigation( {
 	hasResolvedPages,
 	isImmediateParentOfSelectedBlock,
 	isRequestingPages,
-	checkHasResolvedMenuItems,
+	getHasResolvedMenuItems,
 	hasResolvedMenus,
 	isRequestingMenus,
 	isSelected,
@@ -299,7 +299,7 @@ function Navigation( {
 
 		const menuItemsResolved =
 			selectedOptionIsMenu &&
-			checkHasResolvedMenuItems( selectedDropDownOption.key );
+			getHasResolvedMenuItems( selectedDropDownOption.key );
 
 		return ! menuItemsResolved;
 	}
@@ -553,7 +553,7 @@ export default compose( [
 					per_page: -1,
 				} );
 			},
-			isRequestingMenuItems: ( menuId ) => {
+			getIsRequestingMenuItems: ( menuId ) => {
 				return select( 'core/data' ).isResolving(
 					'core',
 					'getMenuItems',
@@ -565,7 +565,7 @@ export default compose( [
 					]
 				);
 			},
-			checkHasResolvedMenuItems: ( menuId ) => {
+			getHasResolvedMenuItems: ( menuId ) => {
 				return select( 'core' ).hasFinishedResolution( 'getMenuItems', [
 					{
 						menus: menuId,
