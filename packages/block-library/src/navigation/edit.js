@@ -227,7 +227,7 @@ function Navigation( {
 		return handleCreateEmpty();
 	}
 
-	function buildPlaceHolderInstructionText() {
+	function buildPlaceholderInstructionText() {
 		if ( hasMenus && hasPages ) {
 			return __(
 				'Create a navigation from all existing pages, or choose a menu.'
@@ -313,7 +313,7 @@ function Navigation( {
 					className="wp-block-navigation-placeholder"
 					icon={ icon }
 					label={ __( 'Navigation' ) }
-					instructions={ buildPlaceHolderInstructionText() }
+					instructions={ buildPlaceholderInstructionText() }
 				>
 					<div
 						ref={ ref }
