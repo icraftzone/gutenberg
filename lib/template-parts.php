@@ -152,7 +152,7 @@ function filter_rest_wp_template_part_collection_params( $query_params ) {
 			'description' => __( 'Whether to filter for resolved template parts.', 'gutenberg' ),
 			'type'        => 'boolean',
 		),
-		'template'    => array(
+		'template' => array(
 			'description' => __( 'The template slug for the template that the template part is used by.', 'gutenberg' ),
 			'type'        => 'string',
 		),
@@ -175,7 +175,7 @@ apply_filters( 'rest_wp_template_part_collection_params', 'filter_rest_wp_templa
 function filter_rest_wp_template_part_query( $args, $request ) {
 	if ( $request['resolved'] ) {
 		$template_part_ids = array( 0 ); // Return nothing by default (the 0 is needed for `post__in`).
-		$template_types = $request['template'] ? array( $request['template'] ) : get_template_types();
+		$template_types    = $request['template'] ? array( $request['template'] ) : get_template_types();
 
 		foreach ( $template_types as $template_type ) {
 			// Skip 'embed' for now because it is not a regular template type.
