@@ -173,7 +173,7 @@ apply_filters( 'rest_wp_template_part_collection_params', 'filter_rest_wp_templa
  * @return array Filtered $args.
  */
 function filter_rest_wp_template_part_query( $args, $request ) {
-	if ( $request['resolved'] ) {
+	if ( $request['resolved'] || $request['template'] ) {
 		$template_part_ids = array( 0 ); // Return nothing by default (the 0 is needed for `post__in`).
 		$template_types    = $request['template'] ? array( $request['template'] ) : get_template_types();
 
