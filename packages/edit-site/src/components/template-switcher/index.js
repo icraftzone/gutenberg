@@ -83,7 +83,7 @@ export default function TemplateSwitcher( {
 	}, [ registry ] );
 
 	const { currentTheme, template, templateParts } = useSelect(
-		( _select ) => {
+		( select ) => {
 			const {
 				getCurrentTheme,
 				getEntityRecord,
