@@ -180,8 +180,12 @@ function filter_rest_wp_template_part_query( $args, $request ) {
 	 * so we need the `resolved` flag to convey the different semantics (only return 'resolved' templates that match
 	 * the `slug` vs return _all_ templates that match it (e.g. including all auto-drafts)).
 	 *
+	 * A template parts query with a `template` arg but not a `resolved` one is conceivable, but probably wouldn't be
+	 * very useful: It'd be all template parts for all templates matching that `template` slug (including auto-drafts etc).
+	 *
 	 * @see filter_rest_wp_template_query
 	 * @see filter_rest_wp_template_part_collection_params
+	 * @see https://github.com/WordPress/gutenberg/pull/21878#discussion_r436961706
 	 */
 	if ( $request['resolved'] || $request['template'] ) {
 		$template_part_ids = array( 0 ); // Return nothing by default (the 0 is needed for `post__in`).
