@@ -88,7 +88,7 @@ export default function TemplateSwitcher( {
 				getCurrentTheme,
 				getEntityRecord,
 				getEntityRecords,
-			} = _select( 'core' );
+			} = select( 'core' );
 
 			const _template = getEntityRecord(
 				'postType',
