@@ -343,6 +343,12 @@ function Navigation( {
 									createActionOptions[ 0 ]
 								}
 								onChange={ ( { selectedItem } ) => {
+									if (
+										selectedItem?.key ===
+										selectedCreateActionOption?.key
+									) {
+										return;
+									}
 									setSelectedCreateActionOption(
 										selectedItem
 									);
