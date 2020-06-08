@@ -181,6 +181,9 @@ apply_filters( 'rest_wp_template_collection_params', 'filter_rest_wp_template_co
  * @return array Filtered $args.
  */
 function filter_rest_wp_template_query( $args, $request ) {
+	/**
+	 * @see filter_rest_wp_template_part_query
+	 */
 	if ( $request['resolved'] ) {
 		$template_ids   = array( 0 ); // Return nothing by default (the 0 is needed for `post__in`).
 		$template_types = $request['slug'] ? $request['slug'] : get_template_types();

@@ -173,6 +173,16 @@ apply_filters( 'rest_wp_template_part_collection_params', 'filter_rest_wp_templa
  * @return array Filtered $args.
  */
 function filter_rest_wp_template_part_query( $args, $request ) {
+	/**
+	 * Unlike `filter_rest_wp_template_query`, we resolve queries also if there's only a `template` argument set.
+	 * The difference is that in the case of templates, we can use the `slug` field that already exists (as part
+	 * of the entities endpoint, wheras for template parts, we have to register the extra `template` argument),
+	 * so we need the `resolved` flag to convey the different semantics (only return 'resolved' templates that match
+	 * the `slug` vs return _all_ templates that match it (e.g. including all auto-drafts)).
+	 *
+	 * @see filter_rest_wp_template_query
+	 * @see filter_rest_wp_template_part_collection_params
+	 */
 	if ( $request['resolved'] || $request['template'] ) {
 		$template_part_ids = array( 0 ); // Return nothing by default (the 0 is needed for `post__in`).
 		$template_types    = $request['template'] ? array( $request['template'] ) : get_template_types();
